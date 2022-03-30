@@ -18,13 +18,14 @@ if len(sys.argv) > 1 and sys.argv[1] == "-frontend":
     for replace in replaces:
       filename = replace.get('filename')
       print(f"Replacing {filename}...")
-      file = http.request('GET', replace['file_url'])
+      file_url = replace.get('file_url')
+      file = http.request('GET', file_url)
       path = replace.get('path')
       with open(f"{path}{filename}", 'w') as f:
         f.write(file.data.decode('utf-8'))
       print(f"Completed {filename}")
 
-if len(sys.argv) > 1 and sys.argv[1] == "-theme":
+elif len(sys.argv) > 1 and sys.argv[1] == "-theme":
   print("Updating project templates...")
   http = urllib3.PoolManager()
   print("Getting which files to update...")
@@ -36,7 +37,8 @@ if len(sys.argv) > 1 and sys.argv[1] == "-theme":
     for replace in replaces:
       filename = replace.get('filename')
       print(f"Replacing {filename}...")
-      file = http.request('GET', replace['file_url'])
+      file_url = replace.get('file_url')
+      file = http.request('GET', file_url)
       path = replace.get('path')
       with open(f"{path}{filename}", 'w') as f:
         f.write(file.data.decode('utf-8'))
@@ -51,7 +53,8 @@ elif len(sys.argv) > 1 and sys.argv[1] == "-myself":
   updater = update_files_data.get('update_updater')
   if updater:
     print("Updating updater...")
-    file = http.request('GET', updater)
+    file_url = updater.get('file_url')
+    file = http.request('GET', file_url)
     path = updater.get('path')
     filename = updater.get('filename')
     with open(f"{path}{filename}", 'w') as f:
