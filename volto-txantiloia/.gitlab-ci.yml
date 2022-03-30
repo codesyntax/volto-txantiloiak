@@ -1,0 +1,28 @@
+stages:
+  - publish
+
+publish:
+  image: node:14-alpine
+  stage: publish
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+
+  before_script:
+    - apk add --no-cache git openssh
+    - eval `ssh-agent -s`
+    - echo "${VOLTO_DEPLOY_SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null # add ssh key
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - git config --global user.name "${CI_GITLAB_USERNAME}"
+    - git config --global user.email "${CI_GITLAB_USER_EMAIL}"
+    - export CI_PUSH_REPO=$(echo "$CI_REPOSITORY_URL" | sed -e "s|.*@\(.*\)|git@\1|" -e "s|/|:/|" )
+    - git remote set-url --push origin "ssh://${CI_PUSH_REPO}"
+    - git checkout -B $CI_BUILD_REF_NAME
+    - git pull origin $CI_BUILD_REF_NAME
+    - 'echo "//${CODESYNTAX_NPM_REPO_URL}:_authToken=${CODESYNTAX_REPO_NPM_TOKEN}" > .npmrc'
+    - 'echo "always-auth=true" >> .npmrc'
+    - 'echo "registry \"https://${CODESYNTAX_NPM_REPO_URL}\"" > .yarnrc'
+    - yarn global add release-it
+  script:
+    - release-it --ci --minor --npm.skipChecks
