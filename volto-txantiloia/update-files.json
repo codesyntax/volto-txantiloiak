@@ -4,6 +4,11 @@
       "path": "",
       "filename": ".release-it.json",
       "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/frontend-txantiloia/.release-it.json"
+    },
+    {
+      "path": "",
+      "filename": ".gitlab-ci.yml",
+      "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/frontend-txantiloia/.gitlab-ci.yml"
     }
   ],
   "update_updater":{
