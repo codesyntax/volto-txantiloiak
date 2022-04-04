@@ -20,6 +20,7 @@ publish:
     - git remote set-url --push origin "ssh://${CI_PUSH_REPO}"
     - git checkout -B $CI_BUILD_REF_NAME
     - git pull origin $CI_BUILD_REF_NAME
+    - git push origin -u $CI_BUILD_REF_NAME
     - 'echo "//${CODESYNTAX_NPM_REPO_URL}:_authToken=${CODESYNTAX_REPO_NPM_TOKEN}" > .npmrc'
     - 'echo "always-auth=true" >> .npmrc'
     - 'echo "registry \"https://${CODESYNTAX_NPM_REPO_URL}\"" > .yarnrc'
