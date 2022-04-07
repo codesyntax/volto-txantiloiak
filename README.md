@@ -57,6 +57,8 @@ EEAren proiektuaren txantiloia erabiliko dugu. Horretarako zera egin behar da:
     * **Settings** -> **CI/CD** -> **Variables** -> **Expand** sakatu. Bi aldagai berri gehitu:
         * SSH_SERVER_NAME: balioa zerbitzariaren domeinu izena (adb: `proiektua.korpoweb.com`), **Protected** ez aukeratu eta **Masked** ere ez.
         * VOLTO_SUPERVISOR_NAME: balioa normalean `voltoproiektuizena` izaten da, begiratu buildoutak supervisorrean zer sortu duen, hau voltoa berrabiarazteko erabiltzen da.
+    
+    * **Settings** -> **General** -> **Merge requests** -> **Expand** sakatu. **Merge options** atalean desaktibatu **Enable "Delete source branch" option by default**, defektuz markatuta datorrena.
         
 * Zerbitzari berriarekin Gitlaben konfigurazio orokorra aldatu: volto proiektu hau zerbitzari batera jargatu behar dugunean, zerbitzari horren SSH gakoa zein den esan behar diogu Gitlabi, SSH konexioak ondo egiteko. Horretarako joan helbide honetara: https://gitlab.com/codesyntax
     * Gure makinatik `ssh-keyscan -t rsa zerbitzaria.korpoweb.com` exekutatu eta emaitza gisa txurro bat irtengo da. Txurro hori kopiatu VisualCodera eta **lerro bakarrean utzi**. Hurrengo pausoan erabiliko dugu.
@@ -116,6 +118,8 @@ Honetarako ere EEAren volto addon baten txantiloia erabiliko dugu.
     * **Settings** -> **Repository** -> **Deploy keys** -> **Expand** sakatu. **Privately accesible deploy keys** fitxara joan eta **volto-ssh-deploy-key** agertzen denaren ondoko **Enable** botoia sakatu. Hau egiterakoan **Enabled deploy keys** fitxara pasatuko da. Fitxa horretan bere ondoan dagoen arkatzaren ikonoa sakatu eta **Grant write permissions to this key** checkboxa aukeratu
     
     * **Settings** -> **Repository** -> **Protected branches** -> **Expand** sakatu. **main** adarra defektuz babestuta agertuko da. **Allowed to push** desplegablean kendu aukeratuta dagoen **Maintainers** eta **Deploy Keys** azpian dagoen **volto-ssh-deploy-key** aukeratu.
+
+    * **Settings** -> **General** -> **Merge requests** -> **Expand** sakatu. **Merge options** atalean desaktibatu **Enable "Delete source branch" option by default**, defektuz markatuta datorrena.
     
 Aldaketa hauekin Merge-Request bat onartzen denean bertsio berri bat aterako du, CHANGELOGa bete, tag berri bat sortuko eta https://code.codesyntax.com/npm/ -ra kargatuko du.    
 
