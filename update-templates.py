@@ -9,9 +9,14 @@ update_files_url = "https://raw.githubusercontent.com/codesyntax/volto-txantiloi
 
 
 def update_data(original_data, new_data, format="json"):
+
     if format == "json":
-        pdb.set_trace()
-        return original_data
+        original_json = json.loads(original_data)
+        new_json = json.loads(new_data)
+        for key in new_json:
+            original_json[key] = original_json[key] | new_json[key]
+
+        return json.dumps(original_json, indent=2)
 
     return original_data
 
@@ -45,13 +50,16 @@ if len(sys.argv) > 1 and sys.argv[1] == "-frontend":
             file_url = update.get("file_url")
             file = http.request("GET", file_url)
             path = update.get("path")
+            old_data = ""
+            with open(f"{path}{filename}", "r") as f:
+                old_data = f.read()
             with open(f"{path}{filename}", "w") as f:
                 new_data = update_data(
-                    f.read().decode("utf-8"),
+                    old_data,
                     file.data.decode("utf-8"),
-                    update.get("mode"),
+                    update.get("format"),
                 )
-                f.write(new_data.decode("utf-8"))
+                f.write(new_data)
             print(f"Completed {filename}")
 
 elif len(sys.argv) > 1 and sys.argv[1] == "-theme":
