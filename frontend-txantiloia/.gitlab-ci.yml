@@ -30,6 +30,7 @@ mergerequest:
     - cp jsconfig.json.prod jsconfig.json
   script:
     - yarn
+    - yarn i18n:ci
     - yarn build
 
   artifacts:
@@ -70,9 +71,13 @@ build:
     - git checkout -- .yarnrc yarn.lock
     - git status
     - release-it --ci --minor --npm.skipChecks
+    - git checkout develop
+    - git pull origin main
+    - git push origin -u develop
   artifacts:
     paths:
       - build
+      - node_modules
 
 publish:
   image: alpine
@@ -81,6 +86,7 @@ publish:
     - if: $CI_COMMIT_REF_NAME == "main"
 
   before_script:
+    - apk add --no-cache rsync curl
     - mkdir -p ~/.ssh
     - touch ~/.ssh/known_hosts
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
@@ -94,4 +100,13 @@ publish:
 
   script:
     - scp -P22 -r build/* $SSH_SERVER_USER@$SSH_SERVER_NAME:$SSH_SERVER_BUILDOUT_PATH/frontend/build/
+    - rsync -av node_modules $SSH_SERVER_USER@$SSH_SERVER_NAME:$SSH_SERVER_BUILDOUT_PATH/frontend/
     - ssh -T $SSH_SERVER_USER@$SSH_SERVER_NAME "$SSH_SERVER_BUILDOUT_PATH/bin/supervisorctl restart $VOLTO_SUPERVISOR_NAME"
+  after_script:
+    - export BEFORE_LAST_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | tail -2 | head -1)
+    - export LAST_TAG_COMMITS=$(git log $BEFORE_LAST_TAG.. --format=format:"- %an %h %s" | sed ':a;N;$!ba;s/\n/<br \/>/g')
+    - export LAST_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | tail -1)
+    - export MESSAGE=$(echo "{\"Messages\":[{\"From\":{\"Email\":\"sysadmin@codesyntax.com\",\"Name\":\"Sysadmin Gitlab\"}, \"To\":[{\"Email\":\"$VOLTO_RELEASE_EMAIL_TO\"}],\"Subject\":\"Eguneraketa ${CI_PROJECT_TITLE} v${LAST_TAG}\", \"TextPart\":\"Release-a burutu da ${LAST_TAG} bertsioarekin.\", \"HTMLPart\":\"<h2>Aldaketak</h2><p>${LAST_TAG_COMMITS}</p>\"}]}")
+    - "curl -s -X POST  --user \"$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE\"  \"https://api.mailjet.com/v3.1/send\"
+      -H \"Content-Type: application/json\"
+      -d \"$MESSAGE\""
