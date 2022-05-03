@@ -14,7 +14,7 @@ def update_data(original_data, new_data, format="json"):
         original_json = json.loads(original_data)
         new_json = json.loads(new_data)
         for key in new_json:
-            original_json[key] = original_json[key] | new_json[key]
+            original_json[key].update(new_json[key])
 
         return json.dumps(original_json, indent=2)
 
