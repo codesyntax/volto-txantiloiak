@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "i18n:ci": "yarn i18n && git diff -G'^[^\"POT]' --exit-code"
+  }
+}

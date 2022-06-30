@@ -1,5 +1,5 @@
 {
-  "theme":{
+  "theme": {
     "replaces": [
       {
         "path": "",
@@ -30,9 +30,17 @@
         "filename": ".gitignore",
         "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/frontend-txantiloia/.gitignore"
       }
+    ],
+    "updates": [
+      {
+        "path": "",
+        "filename": "package.json",
+        "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/frontend-txantiloia/package.json",
+        "format": "json"
+      }
     ]
   },
-  "update_updater":{
+  "update_updater": {
     "path": "",
     "filename": "update-templates.py",
     "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/update-templates.py"
