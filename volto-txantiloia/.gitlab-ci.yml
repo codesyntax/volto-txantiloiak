@@ -29,7 +29,9 @@ publish:
     - release-it --ci --minor --npm.skipChecks
     - git checkout develop
     - git pull origin main
+    - npm version prerelease --preid=dev
     - git push origin -u develop
+    - git checkout main
   after_script:
     - export BEFORE_LAST_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | tail -2 | head -1)
     - export LAST_TAG_COMMITS=$(git log $BEFORE_LAST_TAG.. --format=format:"- %an %h %s" | sed ':a;N;$!ba;s/\n/<br \/>/g')
