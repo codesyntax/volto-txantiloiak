@@ -29,14 +29,23 @@ publish:
     - release-it --ci --minor --npm.skipChecks
     - git checkout develop
     - git pull origin main
-    - npm version prerelease --preid=dev
-    - git push origin -u develop
-    - git checkout main
   after_script:
+   - eval `ssh-agent -s`
+    - echo "${VOLTO_DEPLOY_SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null # add ssh key
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - git config --global user.name "${CI_GITLAB_USERNAME}"
+    - git config --global user.email "${CI_GITLAB_USER_EMAIL}"
+    - export CI_PUSH_REPO=$(echo "$CI_REPOSITORY_URL" | sed -e "s|.*@\(.*\)|git@\1|" -e "s|/|:/|" )
+
     - export BEFORE_LAST_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | tail -2 | head -1)
     - export LAST_TAG_COMMITS=$(git log $BEFORE_LAST_TAG.. --format=format:"- %an %h %s" | sed ':a;N;$!ba;s/\n/<br \/>/g')
     - export LAST_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | tail -1)
     - export MESSAGE=$(echo "{\"Messages\":[{\"From\":{\"Email\":\"sysadmin@codesyntax.com\",\"Name\":\"Sysadmin Gitlab\"}, \"To\":[{\"Email\":\"$VOLTO_RELEASE_EMAIL_TO\"}],\"Subject\":\"${CI_PROJECT_TITLE} v${LAST_TAG}\", \"TextPart\":\"Release-a burutu da ${LAST_TAG} bertsioarekin.\", \"HTMLPart\":\"<h2>Aldaketak</h2><p>${LAST_TAG_COMMITS}</p>\"}]}")
-    - "curl -s -X POST  --user \"$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE\"  \"https://api.mailjet.com/v3.1/send\" 
-      -H \"Content-Type: application/json\" 
+    - "curl -s -X POST  --user \"$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE\"  \"https://api.mailjet.com/v3.1/send\"
+      -H \"Content-Type: application/json\"
       -d \"$MESSAGE\""
+    - npm version prerelease --preid=dev
+    - git push origin -u develop
+    - git checkout main
