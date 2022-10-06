@@ -30,7 +30,7 @@ publish:
     - git checkout develop
     - git pull origin main
   after_script:
-   - eval `ssh-agent -s`
+    - eval `ssh-agent -s`
     - echo "${VOLTO_DEPLOY_SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null # add ssh key
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
