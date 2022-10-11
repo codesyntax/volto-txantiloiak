@@ -20,7 +20,7 @@ We need to create the following variables in our Gitlab organization:
 - MJ_APIKEY_PUBLIC: public key of the Mailjet API, used to send emails
 - SSH_KNOWN_HOSTS: list of the rsa keys of the servers known to gitlab ci so the changes can be deployed.
 - SSH_SERVER_BUILDOUT_PATH: path to the buildout where the plone and volto installation lie in the server.
-- SSH_SERVER_USER: user tha is used to scp the changes to the server
+- SSH_SERVER_USER: user that is used to scp the changes to the server
 - VOLTO_DEPLOY_SSH_PRIVATE_KEY: private key used to deploy the volto project to the server. The corresponding public key must be added at `~/.ssh/authorized_keys` in the server.
 - VOLTO_RELEASE_EMAIL_TO: email address to which the success email will be sent.
 
