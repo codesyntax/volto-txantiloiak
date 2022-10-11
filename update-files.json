@@ -11,6 +11,14 @@
         "filename": ".gitlab-ci.yml",
         "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/volto-txantiloia/.gitlab-ci.yml"
       }
+    ],
+    "updates": [
+      {
+        "path": "",
+        "filename": "package.json",
+        "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/volto-txantiloia/package.json",
+        "format": "json"
+      }
     ]
   },
   "frontend": {
