@@ -5,32 +5,32 @@
 
 # English
 
-In this repo you will find the files required to have in a Volto project setup.
+In this repo you will find the files required in a Volto project setup.
 
 ## Gitlab project configuration
 
 We need to create the following variables in our Gitlab organization:
 
-- CI_GITLAB_USER_EMAIL: the email of the user whom will be used to commit the changes made by release-it.
-- CI_GITLAB_USERNAME: the username whom will be used to commit the changes made by release-it
+- CI_GITLAB_USER_EMAIL: the email belonging to the user who will be used to commit the changes made by release-it.
+- CI_GITLAB_USERNAME: the username which will be used to commit the changes made by release-it
 - CODESYNTAX_NPM_REPO_URL: the URL of the private npm registry
 - CODESYNTAX_REPO_NPM_TOKEN: the token needed to publish packages in the private npm registry
 - GITLAB_TOKEN: a gitlab token created by a user of the organization which will be used to commit and push the changes.
 - MJ_APIKEY_PRIVATE: private key of the Mailjet API, used to send emails
-- MJ_APIKEY_PUBLIC: the public key of the Mailjet API, used to send emails
-- SSH_KNOWN_HOSTS: list of the rsa keys of the servers known to gitlab ci to be able to deploy the changes.
-- SSH_SERVER_BUILDOUT_PATH: the path of the buildout where the plone and volto installation lies in the server.
-- SSH_SERVER_USER: the user used to scp the changes to the server
-- VOLTO_DEPLOY_SSH_PRIVATE_KEY: the private key used to deploy the volto project to the server. The corresponding public key must be added at `~/.ssh/authorized_keys` in the server.
-- VOLTO_RELEASE_EMAIL_TO: the email address to which the success email will be sent.
+- MJ_APIKEY_PUBLIC: public key of the Mailjet API, used to send emails
+- SSH_KNOWN_HOSTS: list of the rsa keys of the servers known to gitlab ci so the changes can be deployed.
+- SSH_SERVER_BUILDOUT_PATH: path to the buildout where the plone and volto installation lie in the server.
+- SSH_SERVER_USER: user tha is used to scp the changes to the server
+- VOLTO_DEPLOY_SSH_PRIVATE_KEY: private key used to deploy the volto project to the server. The corresponding public key must be added at `~/.ssh/authorized_keys` in the server.
+- VOLTO_RELEASE_EMAIL_TO: email address to which the success email will be sent.
 
 ## Project composition
 
 Our projects will have 2 packages and 2 repositories:
 
-- `XXXX-frontend`: project repo: this will handle Volto installation and all main dependencies.
+- `XXXX-frontend`: project repo: this will handle the Volto installation and all main dependencies.
 
-- `volto-XXXX`: customization addon: this package will have the custom blocks, configurations and dependencies.
+- `volto-XXXX`: customization addon: this package will contain the custom blocks, configurations and dependencies.
 
 ## How to create the packages
 
@@ -40,12 +40,12 @@ We will be using EEA's template repos to create our packages
 
 - go to gitlab and create the repo: use `XXXX-frontend` as name, do not create a README (there is a checkbox for that)
 - go to https://github.com/eea/volto-frontend-template and click on **Use this template**
-- create a new repo in your github and name it like `XXXX-frontend`
+- create a new repo in your github and name it as `XXXX-frontend`
 - clone this repo to your laptop
   ```bash
   git clone git@github.com:codesyntax/XXXX-frontend
   ```
-- execute these commands to prepare project:
+- execute these commands to prepare the project:
   ```bash
   cd codesyntax-frontend
   nvm install lts/fermium
@@ -63,7 +63,7 @@ We will be using EEA's template repos to create our packages
   git remote add origin git@gitlab.com:username/xxxx-frontend
   git push origin main -u
   ```
-- Download the [update-templates.py](update-templates.py) download it to the repo and execute it to download the required templates:
+- Download the [update-templates.py](update-templates.py) to the repo and execute it to download the required templates:
   ```bash
   python3 update-templates.py -frontend
   ```
@@ -77,14 +77,14 @@ We will be using EEA's template repos to create our packages
 
 - Configure the repo in Gitlab, open https://gitlab.com/organization/XXXX-frontend:
 
-  - **Settings** -> **Repository** -> **Deploy keys** -> **Expand** sakatu. Go to **Privately accesible deploy keys** and **Enable** **volto-ssh-deploy-key** . Doing this the option will go to the **Enabled deploy keys** tab. Click in the pen icon and select the checkbox **Grant write permissions to this key**
+  - **Settings** -> **Repository** -> **Deploy keys** -> **Expand**. Go to **Privately accesible deploy keys** and **Enable** **volto-ssh-deploy-key** . On doing this it will jump to the **Enabled deploy keys** tab. Click on the pen icon and select the checkbox **Grant write permissions to this key**
 
-  - **Settings** -> **Repository** -> **Protected branches** -> **Expand**. The **main** branch will be selected. Unselecte the **Maintainers** in the **Allowed to push** dropdown and select the **volto-ssh-deployley** under **Deploy Keys**.
+  - **Settings** -> **Repository** -> **Protected branches** -> **Expand**. The **main** branch will be selected. Unselect the **Maintainers** in the **Allowed to push** dropdown and select the **volto-ssh-deployley** under **Deploy Keys**.
 
   - **Settings** -> **CI/CD** -> **Variables** -> **Expand**. Add two new vars:
 
-    - SSH_SERVER_NAME: the name of the server, (ex: `project.korpoweb.com`), do not selected **Protected** and **Masked**.
-    - VOLTO_SUPERVISOR_NAME: normally this will be `voltoprojectname` but check the name in the supervisor you are using..
+    - SSH_SERVER_NAME: the name of the server (ex: `project.korpoweb.com`), do not select **Protected** and **Masked**.
+    - VOLTO_SUPERVISOR_NAME: normally this will be `voltoprojectname` but check the name in the supervisor you are using.
 
   - **Settings** -> **General** -> **Merge requests** -> **Expand**. Disable **Enable "Delete source branch" option by default** under **Merge options**.
 
@@ -92,13 +92,13 @@ We will be using EEA's template repos to create our packages
   - Execute `ssh-keyscn -t rsa server.korpoweb.com` and copy the rsa key in **one line**.
   - **Settings** -> **CI/CD** -> **Variables** -> **Expand**. Edit the value of **SSH_KNOWN_HOSTS** and add the key you got in the previous step in a new line.
 
-With these changes the project will be ready to build itself when there is a Merge Request to **main** branch. If there is any error, it will be reported in the Merge Request itself.
+With these changes the project will be ready to build itself when there is a Merge Request to **main** branch. If there is any error it will be reported in the Merge Request itself.
 
-When the Merge Request is accepted, a new version will be prepared, the CHANGELOG updated, a new tag and release created, and the server will be updated automatically.
+When the Merge Request is accepted a new version will be prepared, the CHANGELOG updated, a new tag and release created and the server will be updated automatically.
 
 ### volto-XXXX
 
-- create the repo in Gitlab, name it `volto-XXXX`, do not create a README.
+- create the repo in Gitlab and name it `volto-XXXX`. Do not create a README.
 
 - Go to https://github.com/eea/volto-addon-template and use the button **Use this template**.
 
@@ -126,7 +126,7 @@ When the Merge Request is accepted, a new version will be prepared, the CHANGELO
   git push origin main -u
   ```
 
-- download the [update-templates.py](updates-templates.py) script in this repo and exeute it:
+- download the [update-templates.py](updates-templates.py) script in this repo and execute it:
 
   ```bash
   python3 update-template.py -theme
@@ -140,14 +140,14 @@ When the Merge Request is accepted, a new version will be prepared, the CHANGELO
   ```
 - Configure the repo in Gitlab, open https://gitlab.com/organization/volto-XXXX:
 
-  - **Settings** -> **Repository** -> **Deploy keys** -> **Expand** sakatu. Go to **Privately accesible deploy keys** and **Enable** **volto-ssh-deploy-key** . Doing this the option will go to the **Enabled deploy keys** tab. Click in the pen icon and select the checkbox **Grant write permissions to this key**
+  - **Settings** -> **Repository** -> **Deploy keys** -> **Expand**. Go to **Privately accesible deploy keys** and **Enable** **volto-ssh-deploy-key** . Doing this the option will go to the **Enabled deploy keys** tab. Click on the pen icon and select the checkbox **Grant write permissions to this key**
 
-  - **Settings** -> **Repository** -> **Protected branches** -> **Expand**. The **main** branch will be selected. Unselecte the **Maintainers** in the **Allowed to push** dropdown and select the **volto-ssh-deployley** under **Deploy Keys**.
+  - **Settings** -> **Repository** -> **Protected branches** -> **Expand**. The **main** branch will be selected. Unselect the **Maintainers** in the **Allowed to push** dropdown and select the **volto-ssh-deployley** under **Deploy Keys**.
 
   - **Settings** -> **CI/CD** -> **Variables** -> **Expand**. Add two new vars:
 
-    - SSH_SERVER_NAME: the name of the server, (ex: `project.korpoweb.com`), do not selected **Protected** and **Masked**.
-    - VOLTO_SUPERVISOR_NAME: normally this will be `voltoprojectname` but check the name in the supervisor you are using..
+    - SSH_SERVER_NAME: the name of the server (ex: `project.korpoweb.com`), do not selected **Protected** and **Masked**.
+    - VOLTO_SUPERVISOR_NAME: normally this will be `voltoprojectname` but check the name in the supervisor you are using.
 
   - **Settings** -> **General** -> **Merge requests** -> **Expand**. Disable **Enable "Delete source branch" option by default** under **Merge options**.
 
@@ -165,7 +165,7 @@ The development flow is the following:
 
 - In the `XXXX-frontend` package the Merge Request can't be accepted until the `yarn build` is succesful and this guarantees that the release will be done correctly.
 
-- If we want to debug the results of `yarn build` the build is saved as an artifact so that we can download it.
+- If we want to debug the results of `yarn build` the build is saved as an artifact so that it can be downloaded.
 
 # Euskara
 
