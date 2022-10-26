@@ -1,5 +1,7 @@
 {
   "scripts": {
-    "i18n:ci": "yarn i18n && git diff -G'^[^\"POT]' --exit-code"
+    "i18n:ci": "yarn i18n && git diff -G'^[^\"POT]' --exit-code",
+    "jsconfig:prod": "cp jsconfig.json jsconfig.bak && cp jsconfig.json.prod jsconfig.json",
+    "jsconfig:dev": "cp jsconfig.bak jsconfig.json"    
   }
 }
