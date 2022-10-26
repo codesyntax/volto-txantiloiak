@@ -25,7 +25,7 @@ stages:
     - "curl --output jobs.json --header \"PRIVATE-TOKEN: $GITLAB_TOKEN\" \"https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs?scope[]=success\""
     - export MY_JOB_ID=$(jq 'map(select(.stage | contains ("mergerequest"))) | .[0].id' jobs.json)
     - "curl -L --output artifact.zip --header \"PRIVATE-TOKEN: $GITLAB_TOKEN\" \"https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/$MY_JOB_ID/artifacts\""
-    - unzip -q artifact.zip
+    - unzip -q artifact.zip || true
 
 image: node:14.19.3-alpine
 
