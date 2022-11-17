@@ -34,35 +34,21 @@ Our projects will have 2 packages and 2 repositories:
 
 ## How to create the packages
 
-We will be using EEA's template repos to create our packages
+We will be using Volto's generator to create our packages
 
 ### XXX-frontend
 
 - go to gitlab and create the repo: use `XXXX-frontend` as name, do not create a README (there is a checkbox for that)
-- go to https://github.com/eea/volto-frontend-template and click on **Use this template**
-- create a new repo in your github and name it as `XXXX-frontend`
-- clone this repo to your laptop
+- create a folder where your package will live:
   ```bash
-  git clone git@github.com:codesyntax/XXXX-frontend
+  mkdir XXXX-frontend  
   ```
-- execute these commands to prepare the project:
+- run the volto generator inside the recently created folder:
   ```bash
-  cd codesyntax-frontend
-  nvm install lts/fermium
-  nvm use lts/fermium
-  npm install -g yo @plone/generator-volto ejs
-  npm install ejs
-  rm -rf package.json package-lock.json
-  yo @plone/volto --skip-install --workspace src/addons/*
-  # Answer the questions: name it xxxx-frontend (project name) and set addons to false
-  node bootstrap
-  git checkout -b main
-  git add .
-  git commit -m "Initial commit"
-  git remote rm origin
-  git remote add origin git@gitlab.com:username/xxxx-frontend
-  git push origin main -u
+  cd XXXX-frontend
+  yo @plone/volto
   ```
+  Answer the questions keeping in mind the project name (XXXX-frontend)
 - Download the [update-templates.py](update-templates.py) to the repo and execute it to download the required templates:
   ```bash
   python3 update-templates.py -frontend
@@ -70,6 +56,7 @@ We will be using EEA's template repos to create our packages
 - Upload the changes to your repo:
 
   ```bash
+  git init .
   git add .
   git commit -m "CI-CD configuration"
   git push origin main
@@ -100,31 +87,18 @@ When the Merge Request is accepted a new version will be prepared, the CHANGELOG
 
 - create the repo in Gitlab and name it `volto-XXXX`. Do not create a README.
 
-- Go to https://github.com/eea/volto-addon-template and use the button **Use this template**.
+- Create a folder with your addon name:
+  ```bash
+  mkdir volto-XXXX
+  ```
+- Run the addon generator inside the recently created folder:
+  ```bash
+  cd volto-XXXX
+  yo @plone/volto:addon volto-XXXX
+  ``` 
+  Answer the questions keeping in mind your package name (volto-XXXX)
 
 - Create a repo in your organization account with a name like `volto-XXXX`
-
-- clone the repo to your laptop:
-
-  ```bash
-  git clone git@github.com:organization/volto-XXXX
-  ```
-
-- execute these commands:
-
-  ```bash
-  cd volto-codesyntax
-  nvm install lts/fermium
-  nvm use lts/fermium
-  npm i -g yarn
-  yarn bootstrap
-  git checkout -b main
-  git add .
-  git ci -m "initial commit"
-  git remote rm origin
-  git remote add origin git@gitlab.com:organization/volto-codesyntax
-  git push origin main -u
-  ```
 
 - download the [update-templates.py](updates-templates.py) script in this repo and execute it:
 
