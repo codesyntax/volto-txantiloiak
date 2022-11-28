@@ -8,7 +8,7 @@ publish:
     - if: $CI_COMMIT_REF_NAME == "main"
 
   before_script:
-    - apk add --no-cache git openssh curl
+    - apk add --no-cache git openssh curl make
     - eval `ssh-agent -s`
     - echo "${VOLTO_DEPLOY_SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null # add ssh key
     - mkdir -p ~/.ssh
