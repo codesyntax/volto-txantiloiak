@@ -27,7 +27,7 @@ stages:
     - "curl -L --output artifact.zip --header \"PRIVATE-TOKEN: $GITLAB_TOKEN\" \"https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/$MY_JOB_ID/artifacts\""
     - unzip -q artifact.zip || true
 
-image: node:14.19.3-alpine
+image: node:16.18.1-alpine
 
 mergerequest:
   stage: mergerequest

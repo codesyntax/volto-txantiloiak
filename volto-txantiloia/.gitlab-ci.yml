@@ -2,7 +2,7 @@ stages:
   - publish
 
 publish:
-  image: node:14-alpine
+  image: node:16.18.1-alpine
   stage: publish
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
