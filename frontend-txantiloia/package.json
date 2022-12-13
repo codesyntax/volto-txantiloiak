@@ -1,7 +1,9 @@
 {
   "scripts": {
+    "i18n": "yarn jsconfig:prod && rm -rf build/messages && NODE_ENV=production i18n && yarn jsconfig:dev",
+    "i18nl": "rm -rf build/messages && NODE_ENV=production i18n",
     "i18n:ci": "yarn i18n && git diff -G'^[^\"POT]' --exit-code",
     "jsconfig:prod": "cp jsconfig.json jsconfig.bak && cp jsconfig.json.prod jsconfig.json",
-    "jsconfig:dev": "cp jsconfig.bak jsconfig.json"    
+    "jsconfig:dev": "cp jsconfig.bak jsconfig.json"
   }
 }
