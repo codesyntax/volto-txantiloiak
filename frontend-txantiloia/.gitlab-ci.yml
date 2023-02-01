@@ -86,7 +86,7 @@ publish:
   script:
     - !reference [.template_get_artifacts, script]
     - rsync -a build/* $SSH_SERVER_USER@$SSH_SERVER_NAME:$SSH_SERVER_BUILDOUT_PATH/frontend/build/
-    - rsync -a node_modules $SSH_SERVER_USER@$SSH_SERVER_NAME:$SSH_SERVER_BUILDOUT_PATH/frontend/
+    - rsync -a node_modules $SSH_SERVER_USER@$SSH_SERVER_NAME:$SSH_SERVER_BUILDOUT_PATH/frontend/ --delete-after
     - ssh -T $SSH_SERVER_USER@$SSH_SERVER_NAME "$SSH_SERVER_BUILDOUT_PATH/bin/supervisorctl restart $VOLTO_SUPERVISOR_NAME"
   after_script:
     - export BEFORE_LAST_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | tail -2 | head -1)
