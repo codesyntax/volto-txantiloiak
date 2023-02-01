@@ -32,13 +32,13 @@ image: node:16.18.1-alpine
 mergerequest:
   stage: mergerequest
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME == "develop"'
   before_script:
     - apk add --no-cache git openssh curl jq unzip make
     - !reference [.template_initialize, before_script]
     - yarn jsconfig:prod
   script:
-    - !reference [.template_get_artifacts, script]
+    # - !reference [.template_get_artifacts, script]
     - yarn install --frozen-lockfile
     - yarn jsconfig:dev
     - git checkout -- .yarnrc yarn.lock
