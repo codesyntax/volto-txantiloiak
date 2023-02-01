@@ -37,6 +37,11 @@
         "path": "",
         "filename": ".gitignore",
         "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/frontend-txantiloia/.gitignore"
+      },
+      {
+        "path": "public/",
+        "filename": "robots.txt",
+        "file_url": "https://raw.githubusercontent.com/codesyntax/volto-txantiloiak/main/frontend-txantiloia/public/robots.txt"
       }
     ],
     "updates": [
