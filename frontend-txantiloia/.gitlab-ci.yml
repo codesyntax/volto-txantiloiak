@@ -13,18 +13,18 @@ stages:
     - git config --global user.email "${CI_GITLAB_USER_EMAIL}"
     - export CI_PUSH_REPO=$(echo "$CI_REPOSITORY_URL" | sed -e "s|.*@\(.*\)|git@\1|" -e "s|/|:/|" )
     - git remote set-url --push origin "ssh://${CI_PUSH_REPO}"
-    - git checkout -B $CI_BUILD_REF_NAME
-    - git pull origin $CI_BUILD_REF_NAME
-    - git push origin -u $CI_BUILD_REF_NAME
+    - git checkout -B $CI_COMMIT_REF_NAME
+    - git pull origin $CI_COMMIT_REF_NAME
+    - git push origin -u $CI_COMMIT_REF_NAME
     - 'echo "//${CODESYNTAX_NPM_REPO_URL}:_authToken=${CODESYNTAX_REPO_NPM_TOKEN}" > .npmrc'
     - 'echo "always-auth=true" >> .npmrc'
     - 'echo "registry \"https://${CODESYNTAX_NPM_REPO_URL}\"" > .yarnrc'
 
 .template_get_artifacts:
   script:
-    - "curl --output jobs.json --header \"PRIVATE-TOKEN: $GITLAB_TOKEN\" \"https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs?scope[]=success\""
+    - 'curl --output jobs.json --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs?scope[]=success"'
     - export MY_JOB_ID=$(jq 'map(select(.stage | contains ("mergerequest"))) | .[0].id' jobs.json)
-    - "curl -L --output artifact.zip --header \"PRIVATE-TOKEN: $GITLAB_TOKEN\" \"https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/$MY_JOB_ID/artifacts\""
+    - 'curl -L --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/$MY_JOB_ID/artifacts"'
     - unzip -q artifact.zip || true
 
 image: node:16.18.1-alpine
@@ -93,6 +93,7 @@ publish:
     - export LAST_TAG_COMMITS=$(git log $BEFORE_LAST_TAG.. --format=format:"- %an %h %s" | sed ':a;N;$!ba;s/\n/<br \/>/g')
     - export LAST_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | tail -1)
     - export MESSAGE=$(echo "{\"Messages\":[{\"From\":{\"Email\":\"sysadmin@codesyntax.com\",\"Name\":\"Sysadmin Gitlab\"}, \"To\":[{\"Email\":\"$VOLTO_RELEASE_EMAIL_TO\"}],\"Subject\":\"Eguneraketa ${CI_PROJECT_TITLE} v${LAST_TAG}\", \"TextPart\":\"Release-a burutu da ${LAST_TAG} bertsioarekin.\", \"HTMLPart\":\"<h2>Aldaketak</h2><p>${LAST_TAG_COMMITS}</p>\"}]}")
-    - "curl -s -X POST  --user \"$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE\"  \"https://api.mailjet.com/v3.1/send\"
-      -H \"Content-Type: application/json\"
-      -d \"$MESSAGE\""
+    - 'curl -s -X POST  --user "$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE"  "https://api.mailjet.com/v3.1/send"
+      -H "Content-Type: application/json"
+      -d "$MESSAGE"'
+
